@@ -20,7 +20,7 @@ BBCPOSTD - indicador de postagem
 BBCDTPST - data
 BBCPOSTT - título
 
-Qualquer alteração que gere nova release, terá o executável com e sem banco de dados.
+Qualquer alteração que gere nova release, terá o executável sem banco de dados.
 
 
 Essa aplicação não tem nenhuma filiação com GGGtracker.
