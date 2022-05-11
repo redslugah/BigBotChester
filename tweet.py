@@ -43,5 +43,8 @@ def tweet(content):
 
 def post(author, title, link, posted, host, user, passw, db):
     connection = database.createDbConnection(host, user, passw, db)
+    colon = "'"
+    if any(c in colon for c in title):
+        title = title[:title.find("'")] + '\\'+ title[title.find("'"):]
     query = "INSERT INTO BBCPOSTS (BBCLKPST, BBCNMSTF, BBCPOSTD, BBCPOSTT) VALUES ('"+link+"', '"+author+"', '"+posted+"', '"+title+"');"
     database.executeQuery(connection, query)
