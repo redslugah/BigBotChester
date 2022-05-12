@@ -13,12 +13,9 @@ Você pode baixar os arquivos e alterar conforme necessário. Ao executar o arqu
 Caso deseje utilizar sem banco de dados, será necessário alterar no código para retirar os requesitos do mesmo.
 Se desejar utilizar o banco de dados, pode-se alterar a query através do arquivo tweet.py, ou criar a tabela com as mesmas características já configuradas.
 
-BBCIDPST - ID
-BBCLKPST - Link
-BBCNMSTF - autor
-BBCPOSTD - indicador de postagem
-BBCDTPST - data
-BBCPOSTT - título
+Segue query para criação da tabela do banco de dados MySQL usada de base:
+
+CREATE TABLE BBCPOSTS(BBCIDPST INT AUTO_INCREMENT PRIMARY KEY,BBCLKPST VARCHAR(200),BBCNMSTF VARCHAR(50),BBCPOSTD VARCHAR(4),BBCDTPST TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,BBCPOSTT VARCHAR(150));
 
 Qualquer alteração que gere nova release, terá o executável sem banco de dados.
 
