@@ -43,7 +43,7 @@ def readQuery(connection, query):
     try:
         cursor.execute(query)
         result = cursor.fetchall()
-        print("Query successful")
+        print("Query successful: \n"+query)
         return result
     except Error as err:
         print(f"Error: '{err}'")

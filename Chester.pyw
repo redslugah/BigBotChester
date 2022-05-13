@@ -1,4 +1,5 @@
 #gggtracker crawler by reds
+import database
 import requests
 import sys
 from bs4 import BeautifulSoup
@@ -25,12 +26,17 @@ def read():
     read = posts(itemTitle, itemLink)
     return read
 
-#loop, o if irá checar se a informação da primeira leitura no site é igual a informação da segunda leitura
-#caso seja, irá aguardar 180 segundos e ler novamente
-#caso a informação esteja diferente, significa que o que estou buscando foi atualizado, então pego essa informação diferente
-#formato ela e chamo meu modulo tweet e sua função tweet (tweet.tweet(second)), passo a informação mais recente para ser postada
-# e então faço com que as informações fiquem iguais novamente para continuar comparando com futuras alterações
+"""
+definindo a 1 e a 2 informação como a mesma para começar, já que só irei postar quando tiver informação nova que será
+testada na função acima. Após ter os dados das leituras, chamdo a função timeToGo que é o loop de leitura e postagem
+loop, o if irá checar se a informação da primeira leitura no site é igual a informação da segunda leitura
+caso seja, irá aguardar 180 segundos e ler novamente
+caso a informação esteja diferente, significa que o que estou buscando foi atualizado, então pego essa informação diferente
+formato ela e chamo meu modulo tweet e sua função tweet (tweet.tweet(second)), passo a informação mais recente para ser postada
+e então faço com que as informações fiquem iguais novamente para continuar comparando com futuras alterações
+"""
 def main():
+    # criando thread para poder manter a GUI responsiva
     t = threading.currentThread()
     warnings.filterwarnings("ignore", category=UserWarning, module='bs4')
     print('Monitoring...\n')
@@ -46,8 +52,7 @@ def main():
             second = read()
             print('Monitoring...\n')
     print("\nOh my god, they killed Botty... :(\n")
-#definindo a 1 e a 2 informação como a mesma para começar, já que só irei postar quando tiver informação nova que será
-#testada na função acima. Após ter os dados das leituras, chamdo a função timeToGo que é o loop de leitura e postagem
+
 def configFile(values):
     f = open("config.cfg", "w")
     f.write(values[0]+'\n')
@@ -60,6 +65,24 @@ def configFile(values):
     f.write(values[7])
     f.close()
 
+def createDatabaseWindow(host, user, passw, db):
+    layout = [[sg.Text('You can create tables, insert, delete and select data from the configured database here.', font ='bold')]
+    ,[sg.Multiline(size=(40,20)), sg.Output(size=(40,20), key='queryValue')]
+    ,[sg.Button('SUBMIT QUERY', key='submitQuery'), sg.Button('EXIT', key='exitButton')]]
+    window = sg.Window('DATABASE MANAGEMENT', layout, modal=True)
+    while True:
+        event, values = window.read()
+        if event in (sg.WIN_CLOSED, 'exitButton'):
+            window.close()
+            break
+        elif event == 'submitQuery':
+            window.FindElement('queryValue').Update('')
+            connection = database.createDbConnection(host, user, passw, db)
+            if values[0].split()[0] == 'SELECT':
+                select = database.readQuery(connection, values[0])
+                window.FindElement('queryValue').Update(select)
+            else:
+                database.executeQuery(connection, values[0])
 
 def configWindow():
     try:
@@ -69,13 +92,13 @@ def configWindow():
         f.close()
     except:
         data = ['','','','','','','','']
-    layout = [[sg.Text("Config!", key="configW")]
-    ,[sg.Text("Database configuration", size=(20,0))]
+    layout = [[sg.Button("MANAGE DATABASE", key="manageDB")]
+    ,[sg.Text("Database configuration", size=(20,0), font=('bold'))]
     ,[sg.Text('Host', size =(20, 0), font=('bold')), sg.InputText(data[0])]
     ,[sg.Text('User', size =(20, 0), font=('bold')), sg.InputText(data[1])]
     ,[sg.Text('Password', size =(20, 0), font=('bold')), sg.InputText(data[2])]
     ,[sg.Text('Database', size =(20, 0), font=('bold')), sg.InputText(data[3])]
-    ,[sg.Text("Twitter API configuration", size=(20, 0))]
+    ,[sg.Text("Twitter API configuration", size=(20, 0), font=('bold'))]
     ,[sg.Text('API Key', size =(20, 0), font=('bold')), sg.InputText(data[4])]
     ,[sg.Text('API secret Key', size =(20, 0), font=('bold')), sg.InputText(data[5])]
     ,[sg.Text('Access Token', size =(20, 0), font=('bold')), sg.InputText(data[6])]
@@ -93,6 +116,8 @@ def configWindow():
             configFile(values)
             window.close()
             break
+        elif event == 'manageDB':
+            createDatabaseWindow(data[0], data[1], data[2], data[3])
 
 
 def startWindow():
