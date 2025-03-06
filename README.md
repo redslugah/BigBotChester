@@ -10,7 +10,7 @@ Essa aplicação busca através do gggtracker novos comentários e posts realiza
 Como utilizar:
 
 Você pode baixar os arquivos e alterar conforme necessário. Ao executar o arquivo é necessário entrar na aba de configurações e definir os campos de banco de dados e da API do twitter.
-Caso deseje utilizar sem banco de dados, será necessário alterar no código para retirar os requesitos do mesmo.
+Caso deseje utilizar sem banco de dados, será necessário alterar no código para retirar os requisitos do mesmo.
 Se desejar utilizar o banco de dados, pode-se alterar a query através do arquivo tweet.py, ou criar a tabela com as mesmas características já configuradas.
 
 Segue query para criação da tabela do banco de dados MySQL usada de base:
